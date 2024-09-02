@@ -824,21 +824,17 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'folke/tokyonight.nvim',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'tokyonight-night'
+  -- {
+  --   'ntk148v/komau.vim',
+  --   init = function()
+  --     vim.cmd.colorscheme 'komau'
+  --   end,
+  -- },
 
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
+  {
+    'n1ghtmare/noirblaze-vim',
+    init = function()
+      vim.cmd.colorscheme 'noirblaze'
     end,
   },
 
@@ -954,3 +950,36 @@ require('lazy').setup({
 
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
+-- tscoder config
+_G.refactor_file = function()
+  local current_file = vim.fn.expand '%:p'
+  local user_text = vim.fn.input 'Enter refactor request: '
+
+  -- Save the file before refactoring
+  vim.cmd 'write'
+
+  local cmd
+  local file_extension = vim.fn.expand '%:e'
+
+  if file_extension == 'kind' then
+    cmd = string.format('koder "%s" "%s" s', current_file, user_text)
+  elseif file_extension == 'ts' then
+    cmd = string.format('koder "%s" "%s" s', current_file, user_text)
+  else
+    cmd = string.format('refactor "%s" "%s" s', current_file, user_text)
+  end
+
+  -- Add --check flag if user_text starts with '-' or is empty
+  if user_text:match '^-' or user_text == '' then
+    cmd = cmd .. ' --check'
+  end
+
+  -- Execute the command
+  vim.fn.system('clear && ' .. cmd)
+
+  -- Reload the file
+  vim.cmd 'edit!'
+end
+
+-- Set up the keybinding
+vim.api.nvim_set_keymap('n', '<space>', ':lua _G.refactor_file()<CR>', { noremap = true, silent = true })
