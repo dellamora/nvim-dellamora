@@ -1,7 +1,7 @@
 -- Set <space> as the leader key
 -- See `:help mapleader`
 --  NOTE: Must happen before plugins are loaded (otherwise wrong leader will be used)
-vim.g.mapleader = '<D>' 
+vim.g.mapleader = '<D>'
 vim.g.maplocalleader = '<D> '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
@@ -754,12 +754,14 @@ require('lazy').setup({
   -- },
 
   {
-    'n1ghtmare/noirblaze-vim',
+    dir = vim.fn.stdpath 'config',
+    name = 'cheesecake',
+    lazy = false,
+    priority = 1000,
     init = function()
-      vim.cmd.colorscheme 'noirblaze'
+      require('cheesecake').load()
     end,
   },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
